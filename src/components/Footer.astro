@@ -1,0 +1,43 @@
+---
+const today = new Date();
+import SocialLink from './SocialLink.astro';
+import { getCollection } from 'astro:content';
+const socials = (await getCollection('socials')).sort((a, b) => a.data.ord - b.data.ord);
+---
+
+<footer>
+	&copy; {today.getFullYear()} James Corbett. All rights reserved.
+	<div class="social-links">
+		{
+			socials.map((social) => (
+				<a href={social.data.url} target="_blank">
+					<span class="sr-only">{social.data.desc}</span>
+					<svg viewBox={social.data.viewbox} aria-hidden="true" width="32" height="32">
+						<path fill="currentColor" d={social.data.svg}></path>
+					</svg>
+				</a>
+			))
+		}
+	</div>
+</footer>
+<style>
+	footer {
+		padding: 2em 1em 6em 1em;
+		background: linear-gradient(var(--gray-gradient)) no-repeat;
+		color: rgb(var(--gray));
+		text-align: center;
+	}
+	.social-links {
+		display: flex;
+		justify-content: center;
+		gap: 1em;
+		margin-top: 1em;
+	}
+	.social-links a {
+		text-decoration: none;
+		color: rgb(var(--gray));
+	}
+	.social-links a:hover {
+		color: rgb(var(--gray-dark));
+	}
+</style>

@@ -1,0 +1,18 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import Sketch from '../../layouts/SketchLayout.astro';
+
+export async function getStaticPaths() {
+	const sketches = await getCollection('sketches');
+	return sketches.map((sketch) => ({
+		params: { slug: sketch.id },
+		props: sketch,
+	}));
+}
+const sketch = Astro.props;
+const { Content } = await render(sketch);
+---
+
+<Sketch {...sketch.data}>
+	<Content />
+</Sketch>
