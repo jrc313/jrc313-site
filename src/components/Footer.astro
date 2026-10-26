@@ -1,6 +1,5 @@
 ---
 const today = new Date();
-import SocialLink from './SocialLink.astro';
 import { getCollection } from 'astro:content';
 const socials = (await getCollection('socials')).sort((a, b) => a.data.ord - b.data.ord);
 ---

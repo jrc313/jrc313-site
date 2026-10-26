@@ -3,7 +3,7 @@ title: "Polar Flower"
 description: "Randomly generated flowers"
 pubDate: "26 Sep 2026"
 heroImage: "../../assets/polar-flower.png"
-sketchScript: "polar-flower.js"
+sketchScript: "polar-flower"
 ---
 
 This sketch generates random points in a polar coordinate system to produce a flower-like pattern, operating much like a three-dimensional Spirograph.

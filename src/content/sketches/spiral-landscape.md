@@ -3,7 +3,7 @@ title: "Spiral Landscape"
 description: "Undulating spiral landscapes"
 pubDate: "28 Sep 2026"
 heroImage: "../../assets/spiral-landscape.png"
-sketchScript: "spiral-landscape.js"
+sketchScript: "spiral-landscape"
 ---
 
 This sketch generates an Archimedean spiral in a polar coordinate system and uses Perlin noise to transform it into a three-dimensional, undulating surface.

@@ -3,4 +3,4 @@
 
 export const SITE_TITLE = "JRC313";
 export const SITE_DESCRIPTION = "James Corbett's collection of oddities, trinkets and toys";
-export const P5_LIB = "https://cdn.jsdelivr.net/npm/p5@2.3.3/lib/p5.js"
+export const P5_LIB = "https://cdn.jsdelivr.net/npm/p5@2.3.3/lib/p5.esm.js"
