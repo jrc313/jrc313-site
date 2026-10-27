@@ -1,26 +1,37 @@
 import p5 from "p5";
 
-export class Point3
-{
-  constructor(x, y, z)
-  {
+export default class Point3 {
+  constructor(x, y, z) {
     this.x = x;
     this.y = y;
     this.z = z;
   }
+
+  add(p) {
+    this.x += p.x;
+    this.y += p.y;
+    this.z += p.z;
+  }
+
+  copyTo(p) {
+    p.x = this.x;
+    p.y = this.y;
+    p.z = this.z;
+  }
+
+  copyOf() {
+    return new Point3(this.x, this.y, this.z);
+  }
 }
 
-export class PolarCoord3
-{
-  constructor(r, theta, phi = 0)
-  {
+export class PolarCoord3 {
+  constructor(r, theta, phi = 0) {
     this.r = r;
     this.theta = theta;
     this.phi = phi;
   }
 
-  toCartesian()
-  {
+  toCartesian() {
     let x = this.r * Math.sin(this.theta) * Math.cos(this.phi);
     let y = this.r * Math.sin(this.theta) * Math.sin(this.phi);
     let z = this.r * Math.cos(this.theta);
@@ -28,8 +39,7 @@ export class PolarCoord3
     return new Point3(x, y, z);
   }
 
-  toCartesianVector()
-  {
+  toCartesianVector() {
     let x = this.r * Math.sin(this.theta) * Math.cos(this.phi);
     let y = this.r * Math.sin(this.theta) * Math.sin(this.phi);
     let z = this.r * Math.cos(this.theta);
@@ -38,16 +48,13 @@ export class PolarCoord3
   }
 }
 
-export class PolarCoord2
-{
-  constructor(r, theta)
-  {
+export class PolarCoord2 {
+  constructor(r, theta) {
     this.r = r;
     this.theta = theta;
   }
 
-  toCartesian()
-  {
+  toCartesian() {
     let x = this.r * Math.cos(this.theta);
     let y = this.r * Math.sin(this.theta);
     let z = 0.0;
@@ -55,8 +62,7 @@ export class PolarCoord2
     return new Point3(x, y, z);
   }
 
-  toCartesianVector()
-  {
+  toCartesianVector() {
     let x = this.r * Math.sin(this.theta) * Math.cos(this.phi);
     let y = this.r * Math.sin(this.theta) * Math.sin(this.phi);
     let z = 0
