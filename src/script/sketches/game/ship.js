@@ -52,56 +52,43 @@ export default class Ship
         
         // Draw the ship
     	p5.fill(100, 100, 200);
-        p5.stroke(0, 0, 0);
+        p5.noStroke();
         
         p5.beginShape(p5.QUAD_STRIP);
         p5.vertex(this.x1, y1, this.z1);
-        p5.vertex(this.x2, y1, this.z1);
-        p5.vertex(this.x2, y1, this.z2);
+        p5.vertex(this.x1, y2, this.z1);
         p5.vertex(this.x1, y1, this.z2);
         p5.vertex(this.x1, y2, this.z2);
+        p5.vertex(this.x2, y1, this.z2);
         p5.vertex(this.x2, y2, this.z2);
-        p5.vertex(this.x2, y2, this.z1);
-        p5.vertex(this.x1, y2, this.z1);
-        p5.vertex(this.x1, y1, this.z1);
         p5.vertex(this.x2, y1, this.z1);
+        p5.vertex(this.x2, y2, this.z1);
+        p5.vertex(this.x1, y1, this.z1);
+        p5.vertex(this.x1, y2, this.z1);
         p5.endShape();
 
         p5.beginShape(p5.QUADS);
         p5.vertex(this.x1, y1, this.z1);
+        p5.vertex(this.x2, y1, this.z1);
+        p5.vertex(this.x2, y1, this.z2);
+        p5.vertex(this.x1, y1, this.z2);
         p5.vertex(this.x1, y2, this.z1);
         p5.vertex(this.x1, y2, this.z2);
-        p5.vertex(this.x1, y1, this.z2);
-        
-        p5.vertex(this.x2, y1, this.z1);
-        p5.vertex(this.x2, y2, this.z1);
         p5.vertex(this.x2, y2, this.z2);
-        p5.vertex(this.x2, y1, this.z2);
+        p5.vertex(this.x2, y2, this.z1);
         p5.endShape();
         
         // Draw the bottom shadow
-        let shadowAlpha = Math.floor(((World.WORLD_HEIGHT - this.h) / World.WORLD_HEIGHT) * 200) + 55;
-        p5.fill(100, 100, 100, shadowAlpha);
+        let shadowAlpha = Math.floor(((World.WORLD_HEIGHT - this.h) / World.WORLD_HEIGHT) * 220) + 25;
+        p5.fill(150, 150, 150, shadowAlpha);
         p5.noStroke();
 
         p5.beginShape(p5.QUADS);
-        p5.vertex(this.x1, World.WORLD_HEIGHT, this.z1);
-        p5.vertex(this.x2, World.WORLD_HEIGHT, this.z1);
-        p5.vertex(this.x2, World.WORLD_HEIGHT, this.z2);
-        p5.vertex(this.x1, World.WORLD_HEIGHT, this.z2);
+        p5.vertex(this.x1, World.WORLD_HEIGHT - 0.1, this.z1);
+        p5.vertex(this.x2, World.WORLD_HEIGHT - 0.1, this.z1);
+        p5.vertex(this.x2, World.WORLD_HEIGHT - 0.1, this.z2);
+        p5.vertex(this.x1, World.WORLD_HEIGHT - 0.1, this.z2);
         p5.endShape();
-        
-        // Draw the ceiling shadow
-        /*
-        shadowAlpha = (int)((this.h / World.WORLD_HEIGHT) * 200) + 55;
-        p5.fill(100, 100, 100, shadowAlpha);
-        p5.beginShape(p5.QUADS);
-        p5.vertex(this.x1, 0, this.z1);
-        p5.vertex(this.x2, 0, this.z1);
-        p5.vertex(this.x2, 0, this.z2);
-        p5.vertex(this.x1, 0, this.z2);
-        p5.endShape();
-        */
         
         this.sparkManager.doTick(p5);
     }

@@ -56,6 +56,10 @@ const { title, description, pubDate, updatedDate, sketchScript } = Astro.props;
             #sketch-container {
                 width: 100%;
             }
+
+			.source {
+				text-align: center;
+			}
 		</style>
 	</head>
 
@@ -79,6 +83,9 @@ const { title, description, pubDate, updatedDate, sketchScript } = Astro.props;
                 </div>
 				<div id="sketch-container" data-sketch={sketchScript}></div>
                 <slot />
+				<div class="source">
+					[<a href=`https://github.com/jrc313/jrc313-site/blob/main/src/script/sketches/${sketchScript}.js`>Source Code</a>]
+				</div>
 			</article>
 		</main>
 		<Footer />

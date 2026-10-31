@@ -35,43 +35,44 @@ export default class Bar
     	let z2 = this.z + Bar.HALF_BAR_LENGTH;
     	
     	// Draw bar
-    	p5.fill(255, 255, 255);
-        p5.stroke(0, 0, 0);
+    	p5.fill(130);
+        //p5.stroke(120);
+        p5.noStroke();
+
         p5.beginShape(p5.QUAD_STRIP);
         p5.vertex(x1, y1, z1);
-        p5.vertex(x2, y1, z1);
-        p5.vertex(x2, y1, z2);
+        p5.vertex(x1, y2, z1);
         p5.vertex(x1, y1, z2);
         p5.vertex(x1, y2, z2);
+        p5.vertex(x2, y1, z2);
         p5.vertex(x2, y2, z2);
-        p5.vertex(x2, y2, z1);
-        p5.vertex(x1, y2, z1);
-        p5.vertex(x1, y1, z1);
         p5.vertex(x2, y1, z1);
+        p5.vertex(x2, y2, z1);
+        p5.vertex(x1, y1, z1);
+        p5.vertex(x1, y2, z1);
         p5.endShape();
 
         p5.beginShape(p5.QUADS);
         p5.vertex(x1, y1, z1);
+        p5.vertex(x2, y1, z1);
+        p5.vertex(x2, y1, z2);
+        p5.vertex(x1, y1, z2);
         p5.vertex(x1, y2, z1);
         p5.vertex(x1, y2, z2);
-        p5.vertex(x1, y1, z2);
-        
-        p5.vertex(x2, y1, z1);
-        p5.vertex(x2, y2, z1);
         p5.vertex(x2, y2, z2);
-        p5.vertex(x2, y1, z2);
+        p5.vertex(x2, y2, z1);
         p5.endShape();
         
         // Draw the shadows
-        let shadowAlpha = Math.floor(((World.WORLD_HEIGHT - this.h) / World.WORLD_HEIGHT) * 200) + 55;
-        p5.fill(100, 100, 100, shadowAlpha);
+        let shadowAlpha = Math.floor(((World.WORLD_HEIGHT - this.h) / World.WORLD_HEIGHT) * 220) + 25;
+        p5.fill(150, 150, 150, shadowAlpha);
         p5.noStroke();
         // Draw the bottom shadow
         p5.beginShape(p5.QUADS);
-        p5.vertex(x1, World.WORLD_HEIGHT, z1);
-        p5.vertex(x2, World.WORLD_HEIGHT, z1);
-        p5.vertex(x2, World.WORLD_HEIGHT, z2);
-        p5.vertex(x1, World.WORLD_HEIGHT, z2);
+        p5.vertex(x1, World.WORLD_HEIGHT - 0.1, z1);
+        p5.vertex(x2, World.WORLD_HEIGHT - 0.1, z1);
+        p5.vertex(x2, World.WORLD_HEIGHT - 0.1, z2);
+        p5.vertex(x1, World.WORLD_HEIGHT - 0.1, z2);
         p5.endShape();
         
         if (this.x < Bar.BONUS_START_X)

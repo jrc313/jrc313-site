@@ -1,5 +1,5 @@
 import World from "./game/world.js";
-
+import fontSrc from "./data/arial-black.ttf";
 
 export default (sketch_width, sketch_height) => {
 
@@ -14,7 +14,7 @@ export default (sketch_width, sketch_height) => {
 
 		let state = STATE_MENU;
 
-		const FONT_SIZE = 14;
+		const FONT_SIZE = 20;
 
 		let isSmooth = true;
 		let isPaused = false;
@@ -22,10 +22,10 @@ export default (sketch_width, sketch_height) => {
 		let gameImage;
 
 		p5.setup = async () => {
-			font = await p5.loadFont("/p5-fonts/arial-black.ttf");
-			p5.textFont(font, FONT_SIZE);
-			p5.frameRate(45);
-			p5.createCanvas(sketch_width, sketch_height, p5.WEBGL);
+			font = await p5.loadFont(fontSrc);
+			
+			p5.frameRate(50);
+			p5.createCanvas(sketch_width, 400, p5.WEBGL);
 
 			world = new World(p5, gameOver);
 			p5.background(255, 255, 255);
@@ -33,13 +33,20 @@ export default (sketch_width, sketch_height) => {
 		}
 
 		p5.draw = () => {
-
+			p5.textFont(font, FONT_SIZE);
 			p5.background(255, 255, 255);
 			p5.stroke(0);
+			p5.translate(-360, -200, 0);
+			if (isSmooth) {
+				p5.smooth();
+			}
+			else {
+				p5.noSmooth();
+			}
 			switch (state) {
 				case STATE_PLAYING:
 					if (isPaused) {
-						p5.text("Paused", (width >> 1) - 40, height >> 1);
+						p5.text("Paused", (p5.width >> 1) - 40, p5.height >> 1);
 						return;
 					}
 					world.doTick();
@@ -54,7 +61,7 @@ export default (sketch_width, sketch_height) => {
 					p5.pop();
 					world.renderScore();
 
-					p5.text("Click to play!", p5.width - 90, 25);
+					p5.text("Click to play!", p5.width - 150, 25);
 					break;
 
 			}
@@ -72,27 +79,25 @@ export default (sketch_width, sketch_height) => {
 		}
 
 		p5.keyPressed = () => {
-			if (p5.key == 's' || p5.key == 'S') {
-				if (isSmooth) {
-					p5.noSmooth();
-				}
-				else {
-					p5.smooth();
-				}
-				isSmooth = !isSmooth;
-				return;
+			switch (p5.key)
+			{
+				case 's':
+				case 'S':
+					isSmooth = !isSmooth;
+					break;
+				case 'd':
+				case 'D':
+					world.debug = !world.debug;
+					break;
+				case 'p':
+				case 'P':
+					state == STATE_PLAYING && (isPaused = !isPaused);
+					break;
 			}
 
-			switch (state) {
-				case STATE_PLAYING:
-					if (p5.key == 'p' || p5.key == 'P') {
-						isPaused = !isPaused;
-					}
-					break;
-
-				case STATE_MENU:
-					startGame();
-					break;
+			if (state == STATE_MENU)
+			{
+				startGame();
 			}
 
 		}

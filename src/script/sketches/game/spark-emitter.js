@@ -67,7 +67,7 @@ export default class SparkEmitter
             
             if (this.particles[i].energy > 0)
             {
-            	//p5.stroke(255, 102, 0, 8.5f * particles[i].energy);
+            	//p5.stroke(255, 102, 0, 8.5 * particles[i].energy);
             	p5.stroke(255, 102 + (this.particles[i].energy * 10), 0, 150);
             	p5.line(this.particles[i].position.x, this.particles[i].position.y, this.particles[i].position.z,
                         this.particles[i].prevPosition.x, this.particles[i].prevPosition.y, this.particles[i].prevPosition.z);

@@ -21,7 +21,7 @@ export default class World
     static STATE_DYING = 4;
     static STATE_GAME_OVER = 8;
     
-	static START_DURATION = 135;
+	static START_DURATION = 90;
 
     static BONUS_FADE_SPEED = 3;			// Speed that the bonus text alpha channel decreases by.
     static MAX_SKIRTING_HEIGHT = 25;		// The threshold for the distance between the ship and
@@ -58,6 +58,8 @@ export default class World
     skirtingDuration;			// number of ticks the ship has been skirting the ceiling or floor
     bonusTextAlpha = 0;			// Bonus text alpha channel value
     bonusText = "";				// Current bonus text
+
+	debug = false;
     
     constructor(p5, gameOverFn)
     {
@@ -139,7 +141,7 @@ export default class World
     	this.shipThrusting = this.p5.mouseIsPressed;
     	if (this.p5.keyIsPressed)
     	{
-    		if (this.p5.key == ' ' || this.p5.keyCode == this.p5.UP_ARROW)
+    		if (this.p5.key != 's' && this.p5.key != 'p' && this.p5.key != 'd')
     		{
     			this.shipThrusting = true;
     		}
@@ -187,7 +189,7 @@ export default class World
     	}
     	
     	let prevLevel = this.level;
-    	this.level = Math.abs(this.ticks / 1000) + 1;
+    	this.level = Math.floor(this.ticks / 200) + 1;
     	
     	if (prevLevel != this.level)
     	{
@@ -322,11 +324,11 @@ export default class World
     {
     	this.renderGame();
     	
-    	let timeRemaining = 3 - (this.ticks / 45);
+    	let timeRemaining = Math.ceil(3 - (this.ticks / 30));
     	let msg = "Starting in " + timeRemaining; 
 
 		this.p5.fill(0, 0, 0);
-		this.p5.text(msg, 10, this.p5.height >> 1);
+		this.p5.text(msg, 300, 120);
 
     }
     
@@ -334,23 +336,23 @@ export default class World
     {
     	this.p5.push();
 	    	this.p5.rotateY(this.p5.PI / 8);
-	    	this.p5.translate(40, 70, 0);
+	    	this.p5.translate(40, 150, 0);
 	
 	    	//this.p5.stroke(0, 0, 0, 50);
 	    	this.p5.noStroke();
 	    	this.p5.fill(200, 200, 200, 100);
 	    	// draw ceiling
 	    	this.p5.beginShape(this.p5.QUADS);
-	    	this.p5.vertex(World.TUNNEL_START_X, 0, -Bar.HALF_BAR_LENGTH);
-	    	this.p5.vertex(World.TUNNEL_END_X, 0, -Bar.HALF_BAR_LENGTH);
+	    	this.p5.vertex(World.TUNNEL_START_X, 0, -Bar.HALF_BAR_LENGTH + 0.1);
+	    	this.p5.vertex(World.TUNNEL_END_X, 0, -Bar.HALF_BAR_LENGTH + 0.1);
 	    	this.p5.vertex(World.TUNNEL_END_X, 0, Bar.HALF_BAR_LENGTH);
 	    	this.p5.vertex(World.TUNNEL_START_X, 0, Bar.HALF_BAR_LENGTH);
 	    	this.p5.endShape();
 	    	
 	    	// draw floor
 	    	this.p5.beginShape(this.p5.QUADS);
-	    	this.p5.vertex(World.TUNNEL_START_X, World.WORLD_HEIGHT, -Bar.HALF_BAR_LENGTH);
-	    	this.p5.vertex(World.TUNNEL_END_X, World.WORLD_HEIGHT, -Bar.HALF_BAR_LENGTH);
+	    	this.p5.vertex(World.TUNNEL_START_X, World.WORLD_HEIGHT, -Bar.HALF_BAR_LENGTH + 0.1);
+	    	this.p5.vertex(World.TUNNEL_END_X, World.WORLD_HEIGHT, -Bar.HALF_BAR_LENGTH + 0.1);
 	    	this.p5.vertex(World.TUNNEL_END_X, World.WORLD_HEIGHT, Bar.HALF_BAR_LENGTH);
 	    	this.p5.vertex(World.TUNNEL_START_X, World.WORLD_HEIGHT, Bar.HALF_BAR_LENGTH);
 	    	this.p5.endShape();
@@ -358,38 +360,41 @@ export default class World
 	    	this.p5.fill(200, 200, 200, 50);
 	    	// draw back panel
 	    	this.p5.beginShape(this.p5.QUADS);
-	    	this.p5.vertex(World.TUNNEL_START_X, 0, -Bar.HALF_BAR_LENGTH);
-	    	this.p5.vertex(World.TUNNEL_END_X, 0, -Bar.HALF_BAR_LENGTH);
-	    	this.p5.vertex(World.TUNNEL_END_X, World.WORLD_HEIGHT, -Bar.HALF_BAR_LENGTH);
-	    	this.p5.vertex(World.TUNNEL_START_X, World.WORLD_HEIGHT, -Bar.HALF_BAR_LENGTH);
+	    	this.p5.vertex(World.TUNNEL_START_X, 0, -Bar.HALF_BAR_LENGTH + 0.1);
+	    	this.p5.vertex(World.TUNNEL_END_X, 0, -Bar.HALF_BAR_LENGTH + 0.1);
+	    	this.p5.vertex(World.TUNNEL_END_X, World.WORLD_HEIGHT, -Bar.HALF_BAR_LENGTH + 0.1);
+	    	this.p5.vertex(World.TUNNEL_START_X, World.WORLD_HEIGHT, -Bar.HALF_BAR_LENGTH + 0.1);
 	    	this.p5.endShape();
 	    	
 	        for (let i = 0; i < this.bars.length; i++)
 	        {
-	            /* DEBUG
-	        	this.p5.push();
-	            	this.p5.fill(0, 0, 0);
-					this.p5.translate(this.bars[i].x + Bar.HALF_BAR_WIDTH, World.WORLD_HEIGHT - this.bars[i].h, Bar.HALF_BAR_LENGTH);
-	        		this.p5.text("i: " + i, 0, -10);
-	        		this.p5.text("h: " + this.bars[i].h, 0, 10);
-	        		this.p5.text("v: " + this.bars[i].hVelocity, 0, 30);
-        		this.p5.pop();
-        		*/
+	            if (this.debug)
+				{
+					this.p5.push();
+						this.p5.fill(0, 0, 0);
+						this.p5.translate(this.bars[i].x + Bar.HALF_BAR_WIDTH, World.WORLD_HEIGHT - this.bars[i].h, Bar.HALF_BAR_LENGTH);
+						this.p5.text("i: " + i, 0, -30);
+						this.p5.text("h: " + this.bars[i].h, 0, -10);
+						this.p5.text("v: " + this.bars[i].hVelocity, 0, 10);
+						this.p5.text("a: " + this.bars[i].bonusAlpha, 0, 30);
+					this.p5.pop();
+				}
 	        	this.bars[i].render(this.p5);
 	        }
 
-        	/* DEBUG
-	        this.p5.push();
-            	this.p5.fill(0, 0, 0);
-				this.p5.translate(this.ship.x2 + 5, World.WORLD_HEIGHT - this.ship.h, 0);
-        		this.p5.text("h: " + (int)this.ship.h, 0, 10);
-    		this.p5.pop();
-    		*/
+        	if (this.debug)
+			{
+				this.p5.push();
+					this.p5.fill(0, 0, 0);
+					this.p5.translate(this.ship.x2 + 5, World.WORLD_HEIGHT - this.ship.h, 0);
+					this.p5.text("h: " + Math.floor(this.ship.h), 0, 10);
+				this.p5.pop();
+			}
 	        
 	        this.ship.render(this.p5);
 	    this.p5.pop();
 	    this.p5.fill(0, 0, 0, this.bonusTextAlpha);
-	    this.p5.text(this.bonusText, 10, this.p5.height - 15);
+	    this.p5.text(this.bonusText, 250, this.p5.height - 15);
     }
     
     renderScore()
@@ -405,12 +410,16 @@ export default class World
     		this.p5.translate(-this.ticks * 5, 0, -this.ticks * 6);
     		this.renderGame();
     	this.p5.pop();
+		this.renderGameOver();
     }
     
     renderGameOver()
     {
     	this.p5.fill(255, 0, 0);
-    	this.p5.text("Game Over!", 100, 45);
+		this.p5.push();
+		this.p5.translate(0, this.ticks * 1.3, this.ticks * 13);
+    	this.p5.text("Game Over!", 300, 120);
+		this.p5.pop();
     }
 	
 }
