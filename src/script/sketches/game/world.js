@@ -21,6 +21,8 @@ export default class World
     static STATE_DYING = 4;
     static STATE_GAME_OVER = 8;
     
+	static DYING_TICKS = 60;
+
 	static START_DURATION = 90;
 
     static BONUS_FADE_SPEED = 3;			// Speed that the bonus text alpha channel decreases by.
@@ -294,7 +296,7 @@ export default class World
 
 	doDyingTick()
     {
-    	if (this.ticks > 45)
+    	if (this.ticks > World.DYING_TICKS)
     	{
     		this.renderDying();
     		this.gameOverFn();
@@ -328,6 +330,7 @@ export default class World
     	let msg = "Starting in " + timeRemaining; 
 
 		this.p5.fill(0, 0, 0);
+		this.p5.textAlign(this.p5.LEFT);
 		this.p5.text(msg, 300, 120);
 
     }
@@ -373,6 +376,7 @@ export default class World
 					this.p5.push();
 						this.p5.fill(0, 0, 0);
 						this.p5.translate(this.bars[i].x + Bar.HALF_BAR_WIDTH, World.WORLD_HEIGHT - this.bars[i].h, Bar.HALF_BAR_LENGTH);
+						this.p5.textAlign(this.p5.LEFT);
 						this.p5.text("i: " + i, 0, -30);
 						this.p5.text("h: " + this.bars[i].h, 0, -10);
 						this.p5.text("v: " + this.bars[i].hVelocity, 0, 10);
@@ -387,6 +391,7 @@ export default class World
 				this.p5.push();
 					this.p5.fill(0, 0, 0);
 					this.p5.translate(this.ship.x2 + 5, World.WORLD_HEIGHT - this.ship.h, 0);
+					this.p5.textAlign(this.p5.LEFT);
 					this.p5.text("h: " + Math.floor(this.ship.h), 0, 10);
 				this.p5.pop();
 			}
@@ -394,11 +399,13 @@ export default class World
 	        this.ship.render(this.p5);
 	    this.p5.pop();
 	    this.p5.fill(0, 0, 0, this.bonusTextAlpha);
+		this.p5.textAlign(this.p5.LEFT);
 	    this.p5.text(this.bonusText, 250, this.p5.height - 15);
     }
     
     renderScore()
     {
+		this.p5.textAlign(this.p5.LEFT);
     	this.p5.fill(0, 0, 0);
         this.p5.text("Score: " + this.score, 10, 25);
         this.p5.text("Level: " + this.level, 10, 45);
@@ -417,8 +424,10 @@ export default class World
     {
     	this.p5.fill(255, 0, 0);
 		this.p5.push();
-		this.p5.translate(0, this.ticks * 1.3, this.ticks * 13);
-    	this.p5.text("Game Over!", 300, 120);
+		this.p5.translate(0, 80, 600);
+		const txt = this.ticks > 20 ? "GAME OVER" : "GAME";
+		this.p5.textAlign(this.p5.LEFT);
+    	this.p5.text(txt, 295, 120);
 		this.p5.pop();
     }
 	
