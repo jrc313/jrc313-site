@@ -19,7 +19,7 @@ export default class HighScoreTable
 	static MAX_NAME_LENGTH = 6;
 	static STORAGE_KEY = "scores";
 	
-	static BOX_WIDTH = 30;
+	static BOX_WIDTH = 45;
 	static BOX_SPACING = 4;
 	
 	static ROW_COUNT = 4;
@@ -53,7 +53,7 @@ export default class HighScoreTable
 		this.hideTableFn = hideTableFn;
 		this.offsetX = (this.p5.width - (HighScoreTable.BOX_WIDTH * HighScoreTable.COL_COUNT)) / 2;
 		this.offsetY = (this.p5.height - (HighScoreTable.BOX_WIDTH * HighScoreTable.ROW_COUNT)) / 2;
-		this.getScores();
+		this.loadScores();
 	}
 	
 	init(score, ticks, levelReached, barsPassed, closeOneCount,
@@ -72,24 +72,26 @@ export default class HighScoreTable
 		
 	}
 
-	getScores()
+	loadScores()
 	{
 		this.p5.cursor(this.p5.WAIT);
-		
-		const scoreData = localStorage.getItem(HighScoreTable.STORAGE_KEY);
-		if (scoreData != null)
+
+		let scoreData = localStorage.getItem(HighScoreTable.STORAGE_KEY);
+		if (scoreData == null || scoreData == "")
 		{
-			try
-			{
-				scores = JSON.parse(scoreData);
-				this.scores = scores;
-			}
-			catch {}
+			return;
+		}
+		try
+		{
+			let scores = JSON.parse(scoreData);
+			this.scores = scores;
+		}
+		catch (error)
+		{
+			console.error(error);
 		}
 
 		this.p5.cursor(this.p5.ARROW);
-
-		return this.scores;
 	}
 
 	saveScores()
@@ -255,17 +257,17 @@ export default class HighScoreTable
 		const tableWidth = (maxNameWidth + maxScoreWidth) + 30;
 		const nameX = (this.p5.width - tableWidth) / 2;
 		const scoreX = nameX + tableWidth;
-		const topY = 80;
+		const topY = 140;
 		
 		this.p5.stroke(0, 0, 0);
 		this.p5.fill(255, 255, 255);
 		this.p5.rectMode(this.p5.CORNER);
-		this.p5.rect(nameX - 10, topY - 25, tableWidth + 20, (this.scores.length * 40));
+		this.p5.rect(nameX - 10, topY - 25, tableWidth + 20, (this.scores.length * 30) + 10);
 		
 		this.p5.fill(0, 0, 0);
 		for (let i = 0; i < this.scores.length; i++)
 		{
-			let y = (i * 40) + topY;
+			let y = (i * 30) + topY;
 			let entryNumber = (i + 1) + ":";
 			this.p5.textAlign(this.p5.LEFT);
 			this.p5.text(entryNumber, nameX, y);
