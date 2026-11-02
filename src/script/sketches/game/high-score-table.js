@@ -74,8 +74,6 @@ export default class HighScoreTable
 
 	loadScores()
 	{
-		this.p5.cursor(this.p5.WAIT);
-
 		let scoreData = localStorage.getItem(HighScoreTable.STORAGE_KEY);
 		if (scoreData == null || scoreData == "")
 		{
@@ -90,17 +88,13 @@ export default class HighScoreTable
 		{
 			console.error(error);
 		}
-
-		this.p5.cursor(this.p5.ARROW);
 	}
 
 	saveScores()
 	{
 		this.name == "" && (this.name = "------");
 		this.scores.push([this.name, this.score]);
-		console.log(this.scores);
 		this.scores = this.scores.sort((a, b) => a[1] < b[1]).slice(0, HighScoreTable.MAX_ENTRIES);
-		console.log(this.scores);
 		localStorage.setItem(HighScoreTable.STORAGE_KEY, JSON.stringify(this.scores));
 	}
 	
@@ -278,13 +272,28 @@ export default class HighScoreTable
 
 	}
 	
+	getMouseCoords()
+	{
+		if (this.p5.touches.length > 0)
+		{
+			return {x: this.p5.touches[0].x, y: this.p5.touches[0].x};
+		}
+		else
+		{
+			return {x: this.p5.mouseX, y: this.p5.mouseY};
+		}
+	}
+
 	mouseMoved()
 	{
 		switch (this.state)
 		{
 			case HighScoreTable.STATE_ENTER_NAME:
-				const fCol = (this.p5.mouseX - this.offsetX) / HighScoreTable.BOX_WIDTH;
-				const fRow = (this.p5.mouseY - this.offsetY) / HighScoreTable.BOX_WIDTH;
+
+				const mouse = this.getMouseCoords();
+
+				const fCol = (mouse.x - this.offsetX) / HighScoreTable.BOX_WIDTH;
+				const fRow = (mouse.y - this.offsetY) / HighScoreTable.BOX_WIDTH;
 				const col = fCol < 0 ? -1 : Math.floor(fCol);
 				const row = fRow < 0 ? -1 : Math.floor(fRow);
 
@@ -293,20 +302,17 @@ export default class HighScoreTable
 					if (this.characters[row][col] == ' ')
 					{
 						this.selected = -1;
-						this.p5.cursor(this.p5.ARROW);
 					}
 					else
 					{
 						this.selected = this.characters[row][col];
-						this.p5.cursor(this.p5.HAND);
 					}
 				}
 				else
 				{
 					this.selected = -1;
-					this.p5.cursor(this.p5.ARROW);
 				}
-				//console.log("Mouse == (" + this.p5.mouseX + ", " + this.p5.mouseY + ") : Matrix == (" + row + ", " + col + ") : Selected == " + this.selected);
+				
 				break;
 				
 			case HighScoreTable.STATE_SHOW_TABLE:

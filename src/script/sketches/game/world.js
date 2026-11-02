@@ -139,6 +139,11 @@ export default class World
     
     doGameTick()
     {
+		if (this.isColliding())
+		{
+			this.setState(World.STATE_DYING);
+    		return;
+		}
     	this.score++;
     	this.shipThrusting = this.p5.mouseIsPressed;
     	if (this.p5.keyIsPressed)
@@ -151,12 +156,6 @@ export default class World
     	
     	this.ship.doTick(this.shipThrusting);
     	this.shipThrusting = false;
-    	
-    	if (this.ship.h <= Ship.HALF_SHIP_WIDTH || this.ship.h >= World.WORLD_HEIGHT - Ship.HALF_SHIP_WIDTH)
-    	{
-    		this.setState(World.STATE_DYING);
-    		return;
-    	}
         
 		let i = this.bars.length;
         while (i-- > 0)
@@ -170,25 +169,6 @@ export default class World
         	this.bars[i].doTick();
         	
         }
-        
-        // Test for collision
-    	let bx1 = this.bars[this.closestBar].x;
-    	let bx2 = this.bars[this.closestBar].x + Bar.BAR_WIDTH;
-    	let by1 = this.bars[this.closestBar].h;
-    	let by2 = this.bars[this.closestBar].h + Bar.BAR_WIDTH;
-    	let sx1 = World.WORLD_CENTER_X;
-    	let sx2 = World.WORLD_CENTER_X + Ship.SHIP_LENGTH;
-    	let sy1 = this.ship.h;
-    	let sy2 = this.ship.h + Ship.SHIP_WIDTH;
-    	
-    	let xPlaneColliding = (bx1 < sx2 && bx2 > sx1);
-    	let yPlaneColliding = (by1 < sy2 && by2 > sy1);
-    	
-    	if (xPlaneColliding && yPlaneColliding)
-    	{
-    		this.setState(World.STATE_DYING);
-    		return;
-    	}
     	
     	let prevLevel = this.level;
     	this.level = Math.floor(this.ticks / 200) + 1;
@@ -216,6 +196,44 @@ export default class World
     		this.barsPassed++;
         }
     }
+
+	isColliding()
+	{
+		// Test for collision
+    	const bx1 = this.bars[this.closestBar].x - Bar.HALF_BAR_WIDTH;
+    	const bx2 = this.bars[this.closestBar].x + Bar.HALF_BAR_WIDTH;
+    	const by1 = World.WORLD_HEIGHT - this.bars[this.closestBar].h - Bar.HALF_BAR_WIDTH;
+    	const by2 = World.WORLD_HEIGHT - this.bars[this.closestBar].h + Bar.HALF_BAR_WIDTH;
+    	const sx1 = World.WORLD_CENTER_X - Ship.HALF_SHIP_LENGTH;
+    	const sx2 = World.WORLD_CENTER_X + Ship.HALF_SHIP_LENGTH;
+    	const sy1 = World.WORLD_HEIGHT - this.ship.h - Ship.HALF_SHIP_WIDTH;
+    	const sy2 = World.WORLD_HEIGHT - this.ship.h + Ship.HALF_SHIP_WIDTH;
+
+		if (this.debug)
+		{
+			this.p5.push();
+				this.p5.rotateY(this.p5.PI / 8);
+				this.p5.translate(40, 150, 0);
+				this.p5.stroke(100, 100, 250);
+				this.p5.noFill();
+				this.p5.push();
+					this.p5.translate(World.WORLD_CENTER_X, World.WORLD_HEIGHT - this.ship.h, World.WORLD_CENTER_Z);
+					this.p5.sphere(20, 4);
+				this.p5.pop();
+				this.p5.push();
+					this.p5.translate(this.bars[this.closestBar].x, World.WORLD_HEIGHT - this.bars[this.closestBar].h, World.WORLD_CENTER_Z);
+					this.p5.sphere(20, 4);
+				this.p5.pop();
+			this.p5.pop();
+		}
+    	
+    	const xPlaneColliding = (bx1 < sx2 && bx2 > sx1);
+    	const yPlaneColliding = (by1 < sy2 && by2 > sy1);
+		const floorColliding = this.ship.h <= Ship.HALF_SHIP_WIDTH;
+		const ceilingColliding = this.ship.h >= World.WORLD_HEIGHT - Ship.HALF_SHIP_WIDTH;
+    	
+    	return (xPlaneColliding && yPlaneColliding) || floorColliding || ceilingColliding;
+	}
     
     testBonuses()
     {
