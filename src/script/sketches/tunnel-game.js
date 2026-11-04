@@ -29,11 +29,6 @@ export default (sketch_width, sketch_height) => {
 			p5.frameRate(50);
 			let p5canvas = p5.createCanvas(sketch_width, 400, p5.WEBGL);
 			let canvas = p5canvas.canvas;
-			// Prevent presses from selecting elements on touch devices
-			canvas.addEventListener("touchstart", (event) => event.preventDefault());
-			canvas.addEventListener("touchmove", (event) => event.preventDefault());
-			canvas.addEventListener("touchend", (event) => event.preventDefault());
-			canvas.addEventListener("touchcancel", (event) => event.preventDefault());
 
 			world = new World(p5, gameOver);
 			highScoreTable = new HighScoreTable(p5, hideTable);
